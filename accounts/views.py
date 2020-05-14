@@ -46,7 +46,11 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+
+            if '@' in form.cleaned_data['username']:
+                user = auth.authenticate(email=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            else:
+                user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 
             if user is None:
                 messages.error(request, _('Specifications entered are incorrect!'))
