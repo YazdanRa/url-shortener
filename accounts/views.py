@@ -29,7 +29,7 @@ def register(request):
 
         user = CustomUser.objects.create_user(
             username=form.cleaned_data['username'],
-            email=form.cleaned_data['email'],
+            email=form.cleaned_data['email'].lower(),
             password=form.cleaned_data['password'],
         )
 
@@ -47,10 +47,15 @@ def login(request):
         form = LoginForm(request.POST)
         if form.is_valid():
 
-            if '@' in form.cleaned_data['username']:
-                user = auth.authenticate(email=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            else:
-                user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            username = form.cleaned_data['username'].lower()
+            if '@' in username:
+                try:
+                    user = CustomUser.objects.filter(email=username).get()
+                    username = user.username
+                except:
+                    pass
+
+            user = auth.authenticate(username=username, password=form.cleaned_data['password'])
 
             if user is None:
                 messages.error(request, _('Specifications entered are incorrect!'))
@@ -76,4 +81,4 @@ def logout(request):
 
 @login_required
 def dashboard(request):
-    pass
+    return render(request, 'accounts/dashboard.html')

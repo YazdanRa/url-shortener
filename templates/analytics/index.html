@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>analytics</title>
+</head>
+<body>
+{% for analytic in analytics %}
+<h2>Analytics: </h2><h3>{{ analytic.title }}</h3>
+<h2>By: </h2><h3>{{ analytic.user }}</h3>
+<h2>URL: </h2><h3>{{ analytic.url }}</h3>
+<h2>Short Path: </h2><h3>{{ analytic.short_path }}</h3>
+<h2>last Day Visits: </h2><h3>{{ analytic.day_visit }}</h3>
+<h2>last Week visits: </h2><h3>{{ analytic.week_visit }}</h3>
+<h2>last Month Visits: </h2><h3>{{ analytic.month_visit }}</h3>
+<h2>Total Visits: </h2><h3>{{ analytic.total_visit }}</h3>
+<h2>last Day Unique Visits: </h2><h3>{{ analytic.unique_day_visit }}</h3>
+<h2>last Week Unique visits: </h2><h3>{{ analytic.unique_week_visit }}</h3>
+<h2>last Month Unique Visits: </h2><h3>{{ analytic.unique_month_visit }}</h3>
+<h2>Total Unique Visits: </h2><h3>{{ analytic.unique_total_visit }}</h3>
+{% endfor %}
+</body>
+</html>

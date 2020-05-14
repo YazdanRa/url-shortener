@@ -9,48 +9,9 @@ from django.utils.translation import gettext_lazy as _
 from accounts.models import CustomUser
 
 
-class BaseForm(forms.Form):
-    def __init__(self, default_class, placeholder, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        text_fields = filter(
-            lambda s: isinstance(s, forms.Field),
-            self.fields.values())
-        for field in text_fields:
-            c = ''
-            try:
-                c = field.widget.attrs['class']
-            except KeyError:
-                pass
+class RegisterForm(forms.Form):
 
-            field.widget.attrs.update({'class': c + ' ' + default_class})
-
-            if placeholder:
-                field.widget.attrs.update({'placeholder': field.label})
-
-
-class LowerField(forms.CharField):
-    def __init__(self, *args, **kwargs):
-        super(LowerField, self).__init__(*args, **kwargs)
-
-    def to_python(self, value):
-        return super().to_python(value).lower()
-
-
-class NameField(forms.CharField):
-    def __init__(self, *args, **kwargs):
-        super(NameField, self).__init__(*args, **kwargs)
-
-    def to_python(self, value):
-        return string.capwords(super().to_python(value))
-
-
-# Actual forms start here #
-
-class RegisterForm(BaseForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__('input100', True, *args, **kwargs)
-
-    username = LowerField(
+    username = forms.CharField(
         label=_('Username'),
         max_length=100,
         validators=[RegexValidator(
@@ -61,7 +22,8 @@ class RegisterForm(BaseForm):
     )
 
     email = forms.EmailField(
-        label=_('email'))
+        label=_('Email')
+    )
 
     password = forms.CharField(
         label=_('Password'),
@@ -95,13 +57,13 @@ class RegisterForm(BaseForm):
         return cleaned_data
 
 
-class LoginForm(BaseForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__('input100', True, *args, **kwargs)
+class LoginForm(forms.Form):
 
-    username = LowerField(
-        label=_('Username/Email'))
+    username = forms.CharField(
+        label=_('Username/Email')
+    )
 
     password = forms.CharField(
         label=_('Password'),
-        widget=forms.PasswordInput())
+        widget=forms.PasswordInput()
+    )

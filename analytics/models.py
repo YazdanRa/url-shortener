@@ -26,6 +26,9 @@ class Visit(models.Model):
     url = models.ForeignKey(ShortURL, related_name='visit', on_delete=models.CASCADE)
     visited_at = models.DateTimeField(auto_now_add=True)
 
+    ip = models.GenericIPAddressField(_('IP Address'), null=True)
+    is_routable = models.BooleanField(null=True)
+
     is_touch_capable = models.BooleanField()
     is_mobile = models.BooleanField()
     is_tablet = models.BooleanField()
@@ -42,9 +45,13 @@ class Visit(models.Model):
         os = OperationSystem.objects.filter(url_visited=self).all()
         return os
 
+    @property
     def device(self):
         device = Device.objects.filter(url_visited=self).all()
         return device
+
+    class Meta:
+        ordering = ['-visited_at']
 
     def __str__(self):
         return '{}'.format(self.url)
