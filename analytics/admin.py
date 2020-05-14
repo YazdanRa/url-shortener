@@ -1,7 +1,8 @@
 from django.contrib import admin
+from django.db.models import Count
 
 from analytics import models
-from analytics.models import Browser
+from analytics.models import Browser, Device, OperationSystem
 
 
 class ShortURL(admin.ModelAdmin):
@@ -18,13 +19,16 @@ class Visit(admin.ModelAdmin):
     search_fields = ('id', 'url', 'ip')
 
     def browser(self, objects):
-        return objects
+        browser = Browser.objects.filter(url_visited=objects).get()
+        return '{} ({})'.format(browser.family, browser.version)
 
     def device(self, objects):
-        return objects
+        device = Device.objects.filter(url_visited=objects).get()
+        return '{} ({})'.format(device.family, device.brand)
 
     def os(self, objects):
-        return objects
+        os = OperationSystem.objects.filter(url_visited=objects).get()
+        return '{} ({})'.format(os.family, os.version)
 
 
 admin.site.register(models.ShortURL, ShortURL)

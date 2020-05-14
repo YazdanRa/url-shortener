@@ -74,6 +74,22 @@ def analytics(request, short_path):
                         visit__visited_at__lte=now(),
                         visit__visited_at__gte=now() - timedelta(days=1)
                     )))\
+        .annotate(unique_total_visit=Count('visit__ip', distinct=True))\
+        .annotate(unique_month_visit=Count('visit__ip', filter=
+                    Q(
+                        visit__visited_at__lte=now(),
+                        visit__visited_at__gte=now() - timedelta(days=30)
+                    ), distinct=True))\
+        .annotate(unique_week_visit=Count('visit__ip', filter=
+                    Q(
+                        visit__visited_at__lte=now(),
+                        visit__visited_at__gte=now() - timedelta(days=7)
+                    ), distinct=True))\
+        .annotate(unique_day_visit=Count('visit__ip', filter=
+                    Q(
+                        visit__visited_at__lte=now(),
+                        visit__visited_at__gte=now() - timedelta(days=1)
+                    ), distinct=True))\
         .distinct()
 
     return render(request, 'analytics/index.html', {
