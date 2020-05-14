@@ -20,7 +20,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Extra model for accounts
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -36,6 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # My app
     'accounts.apps.AccountsConfig',
+    'analytics.apps.AnalyticsConfig',
+
+    # Extra PyPI
+    'django_user_agents',
 
 ]
 
@@ -47,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Extra
+    'django_user_agents.middleware.UserAgentMiddleware', # User Agent
 ]
 
 ROOT_URLCONF = 'yektanet.urls'
@@ -54,7 +59,7 @@ ROOT_URLCONF = 'yektanet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,7 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'yektanet.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -77,7 +81,6 @@ try:
     from .database_sttings import *
 except ImportError:
     pass
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -97,7 +100,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -111,7 +113,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -121,12 +122,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'yektanet/static')
 ]
 
-
 # Media Folder
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
 
 # Messages
 
@@ -137,9 +136,20 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
 }
 
-
 # Default redirect url
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'index'
+
+# # Cache backend is optional, but recommended to speed up user agent parsing
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': '127.0.0.1:11211',
+#     }
+# }
+#
+# # Name of cache backend to cache user agents. If it not specified default
+# # cache alias will be used. Set to `None` to disable caching.
+# USER_AGENTS_CACHE = 'default'
