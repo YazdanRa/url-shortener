@@ -7,8 +7,6 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from accounts.models import CustomUser
-from payment.forms import IranianCreditCardField
-from vpn.models import PlanVariation
 
 
 class BaseForm(forms.Form):

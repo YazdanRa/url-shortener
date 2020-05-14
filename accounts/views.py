@@ -68,3 +68,8 @@ def logout(request):
         auth.logout(request)
         messages.success(request, _('You have successfully logged out'))
         return redirect('index')
+
+
+@login_required
+def dashboard(request):
+    pass
