@@ -1,3 +1,6 @@
+import random
+import uuid
+
 from django.conf import settings
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
@@ -13,7 +16,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django.views.generic import ListView
 
-from .forms import RegisterForm, LoginForm
+from analytics.models import ShortURL
+from yektanet.settings import SHORT_URL_TEMPLATE
+from .forms import RegisterForm, LoginForm, CreateForm
 from .models import CustomUser
 
 
@@ -76,9 +81,40 @@ def logout(request):
     if request.method == 'POST':
         auth.logout(request)
         messages.success(request, _('You have successfully logged out'))
-        return redirect('index')
+        return redirect('register')
 
 
 @login_required
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    URL = ShortURL.objects.filter(user=request.user).all()
+    return render(request, 'accounts/dashboard.html', {
+        'urls': URL,
+        'url_template': SHORT_URL_TEMPLATE
+    })
+
+
+@login_required
+def create(request):
+    if request.method == 'POST':
+        form = CreateForm(request.POST)
+        if form.is_valid():
+            short_path = form.cleaned_data['short_path']
+
+            if not len(short_path):
+                short_path = uuid.uuid4().hex[:8]
+
+            short_url = ShortURL.objects.create(
+                user=request.user,
+                title=form.cleaned_data['title'],
+                url=form.cleaned_data['url'],
+                short_path=short_path,
+                description=form.cleaned_data['description'],
+            )
+
+            messages.success(request, _('Shortcut Created!'))
+            return redirect('dashboard')
+
+    form = CreateForm()
+    return render(request, 'accounts/create.html', {
+        'form': form
+    })

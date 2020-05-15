@@ -5,6 +5,22 @@
     <title>dashboard</title>
 </head>
 <body>
-
+    <h1>My URLs :)</h1>
+    <div>
+        <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button>Logout</button>
+        </form>
+    </div>
+    <br><br>
+    {% for url in urls %}
+        <div>
+            {{ url.title }}
+            <p>Origin URL: <a href="{{ url.url }}">{{ url.url }}</a></p>
+            <p>Short URL: <a href="{{ url_template }}{{ url.short_path }}">{{ url_template }}{{ url.short_path }}</a></p>
+            <p>Analytics: <a href="{{ url_template }}{{ url.short_path }}/analytics">{{ url_template }}{{ url.short_path }}/analytics</a></p>
+        </div><br>
+    {% endfor %}
+    <a href="{% url 'create' %}">Create ShortURL</a>
 </body>
 </html>

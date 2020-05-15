@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from accounts.models import CustomUser
+from analytics.models import ShortURL
 
 
 class RegisterForm(forms.Form):
@@ -67,3 +68,33 @@ class LoginForm(forms.Form):
         label=_('Password'),
         widget=forms.PasswordInput()
     )
+
+
+class CreateForm(forms.Form):
+    title = forms.CharField(
+        label=_('Title')
+    )
+
+    url = forms.URLField(
+        label=_('URL')
+    )
+
+    short_path = forms.CharField(
+        label=_('Short Path (Optional)'),
+        required=False
+    )
+
+    description = forms.CharField(
+        label=_('Description (Optional)'),
+        widget=forms.Textarea,
+        required=False
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        short_path = cleaned_data.get('short_path', None)
+
+        if len(short_path) and ShortURL.objects.filter(Q(short_path__iexact=short_path)).exists():
+            raise forms.ValidationError(_('This short_path already exists!'), code='invalid_unique_field')
+        return cleaned_data

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>create</title>
+</head>
+<body>
+    <h1>Create :)</h1>
+    <form action="{% url 'create' %}" method="POST">
+        {% csrf_token %}
+        <div>
+            <p>{{ form.title.label }}</p>
+            <p>{{ form.title }}</p>
+        </div>
+        <div>
+            <p>{{ form.url.label }}</p>
+            <p>{{ form.url }}</p>
+        </div>
+        <div>
+            <p>{{ form.short_path.label }}</p>
+            <p>{{ form.short_path }}</p>
+        </div>
+        <div>
+            <p>{{ form.description.label }}</p>
+            <p>{{ form.description }}</p>
+        </div>
+        <div>
+            <button>Create</button>
+        </div>
+    </form>
+    <a href="{% url 'dashboard' %}">Back</a>
+</body>
+</html>
