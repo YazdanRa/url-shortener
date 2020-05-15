@@ -53,7 +53,7 @@ virtualenv -p python3 .venv
 ````
 source .venv/bin/activate
 ````
-> after activate you should see (.vev) !
+> after activate you should see (.venv) !
 
 now install requirements via
 ````
