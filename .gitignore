@@ -141,3 +141,4 @@ dmypy.json
 
 /install/
 /pymysql/
+!/yektanet/database_sttings.py

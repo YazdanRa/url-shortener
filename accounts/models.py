@@ -7,4 +7,4 @@ class CustomUser(AbstractUser):
     mobile = models.CharField(null=True, blank=True, max_length=16)
 
     def __str__(self):
-        return '{} {}'.format(self.first_name, self.last_name)
+        return '{} ({})'.format(self.username, self.email)
