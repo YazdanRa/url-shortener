@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Sum, Q, F, Max, DateTimeField
+from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 from django.views.decorators.http import require_http_methods
@@ -56,42 +56,130 @@ def analytics(request, short_path):
     if URL.user.id != request.user.id:
         raise PermissionDenied
 
-    analytics_list = ShortURL.objects\
-        .filter(short_path=URL.short_path)\
-        .annotate(total_visit=Count('visit'))\
-        .annotate(month_visit=Count('visit', filter=
-                    Q(
-                        visit__visited_at__lte=now(),
-                        visit__visited_at__gte=now() - timedelta(days=30)
-                    )))\
-        .annotate(week_visit=Count('visit', filter=
-                    Q(
-                        visit__visited_at__lte=now(),
-                        visit__visited_at__gte=now() - timedelta(days=7)
-                    )))\
-        .annotate(day_visit=Count('visit', filter=
-                    Q(
-                        visit__visited_at__lte=now(),
-                        visit__visited_at__gte=now() - timedelta(days=1)
-                    )))\
-        .annotate(unique_total_visit=Count('visit__ip', distinct=True))\
-        .annotate(unique_month_visit=Count('visit__ip', filter=
-                    Q(
-                        visit__visited_at__lte=now(),
-                        visit__visited_at__gte=now() - timedelta(days=30)
-                    ), distinct=True))\
-        .annotate(unique_week_visit=Count('visit__ip', filter=
-                    Q(
-                        visit__visited_at__lte=now(),
-                        visit__visited_at__gte=now() - timedelta(days=7)
-                    ), distinct=True))\
-        .annotate(unique_day_visit=Count('visit__ip', filter=
-                    Q(
-                        visit__visited_at__lte=now(),
-                        visit__visited_at__gte=now() - timedelta(days=1)
-                    ), distinct=True))\
+    analytics_list = ShortURL.objects \
+        .filter(short_path=URL.short_path) \
+        .annotate(total=Count('visit')) \
+        .annotate(total_mobile=Count('visit', filter=
+                Q(
+                    visit__is_mobile=True,
+                ))) \
+        .annotate(total_pc=Count('visit', filter=
+                Q(
+                    visit__is_pc=True,
+                ))) \
+        .annotate(month=Count('visit', filter=
+                Q(
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=30)
+                ))) \
+        .annotate(month_mobile=Count('visit', filter=
+                Q(
+                    Q(visit__is_mobile=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=30)
+                ))) \
+        .annotate(month_pc=Count('visit', filter=
+                Q(
+                    Q(visit__is_pc=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=30)
+                ))) \
+        .annotate(week=Count('visit', filter=
+                Q(
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=7)
+                ))) \
+        .annotate(week_mobile=Count('visit', filter=
+                Q(
+                    Q(visit__is_mobile=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=7)
+                ))) \
+        .annotate(week_pc=Count('visit', filter=
+                Q(
+                    Q(visit__is_pc=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=7)
+                ))) \
+        .annotate(day=Count('visit', filter=
+                Q(
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=1)
+                ))) \
+        .annotate(day_mobile=Count('visit', filter=
+                Q(
+                    Q(visit__is_mobile=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=1)
+                ))) \
+        .annotate(day_pc=Count('visit', filter=
+                Q(
+                    Q(visit__is_pc=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=1)
+                ))) \
+        .annotate(unique_total=Count('visit__ip', distinct=True)) \
+        .annotate(unique_total_mobile=Count('visit__ip', filter=
+                Q(
+                    visit__is_mobile=True
+                ), distinct=True)) \
+        .annotate(unique_total_pc=Count('visit__ip', filter=
+                Q(
+                    visit__is_pc=True
+                ), distinct=True)) \
+        .annotate(unique_month=Count('visit__ip', filter=
+                Q(
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=30)
+                ), distinct=True))  \
+        .annotate(unique_month_mobile=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_mobile=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=30)
+                ), distinct=True)) \
+        .annotate(unique_month_pc=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_pc=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=30)
+                ), distinct=True)) \
+        .annotate(unique_week=Count('visit__ip', filter=
+                Q(
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=7)
+                ), distinct=True))  \
+        .annotate(unique_week_mobile=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_mobile=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=7)
+                ), distinct=True)) \
+        .annotate(unique_week_pc=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_pc=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=7)
+                ), distinct=True)) \
+        .annotate(unique_day=Count('visit__ip', filter=
+                Q(
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=1)
+                ), distinct=True))  \
+        .annotate(unique_day_mobile=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_mobile=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=1)
+                ), distinct=True))  \
+        .annotate(unique_day_pc=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_pc=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now() - timedelta(days=1)
+                ), distinct=True)) \
         .distinct()
 
     return render(request, 'analytics/index.html', {
-        'analytics': analytics_list
+        'analytics': analytics_list,
     })

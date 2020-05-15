@@ -5,19 +5,87 @@
     <title>analytics</title>
 </head>
 <body>
-{% for analytic in analytics %}
-<h2>Analytics: </h2><h3>{{ analytic.title }}</h3>
-<h2>By: </h2><h3>{{ analytic.user }}</h3>
-<h2>URL: </h2><h3>{{ analytic.url }}</h3>
-<h2>Short Path: </h2><h3>{{ analytic.short_path }}</h3>
-<h2>last Day Visits: </h2><h3>{{ analytic.day_visit }}</h3>
-<h2>last Week visits: </h2><h3>{{ analytic.week_visit }}</h3>
-<h2>last Month Visits: </h2><h3>{{ analytic.month_visit }}</h3>
-<h2>Total Visits: </h2><h3>{{ analytic.total_visit }}</h3>
-<h2>last Day Unique Visits: </h2><h3>{{ analytic.unique_day_visit }}</h3>
-<h2>last Week Unique visits: </h2><h3>{{ analytic.unique_week_visit }}</h3>
-<h2>last Month Unique Visits: </h2><h3>{{ analytic.unique_month_visit }}</h3>
-<h2>Total Unique Visits: </h2><h3>{{ analytic.unique_total_visit }}</h3>
+
+{% for analytic  in analytics %}
+<div>
+    <p>Analytics: {{ analytic.title }}</p>
+    <p>By: {{ analytic.user }}</p>
+    <p>URL: {{ analytic.url }}</p>
+    <p>Short Path: {{ analytic.short_path }}</p>
+</div>
+
+<br><br>
+
+
+<div>
+
+    <div>
+        <p>Total</p>
+        <div>
+            <p>last Day: {{ analytic.day }}</p>
+            <p>last Week: {{ analytic.week }}</p>
+            <p>last Month: {{ analytic.month }}</p>
+            <p>Total: {{ analytic.total }}</p>
+        </div>
+
+        <br><br>
+
+        <p>Mobile</p>
+        <div>
+            <p>last Day: {{ analytic.day_mobile }}</p>
+            <p>last Week: {{ analytic.week_mobile }}</p>
+            <p>last Month: {{ analytic.month_mobile }}</p>
+            <p>Total: {{ analytic.total_mobile }}</p>
+        </div>
+
+        <br><br>
+
+        <p>PC</p>
+        <div>
+            <p>last Day: {{ analytic.day_pc }}</p>
+            <p>last Week: {{ analytic.week_pc }}</p>
+            <p>last Month: {{ analytic.month_pc }}</p>
+            <p>Total: {{ analytic.total_pc }}</p>
+        </div>
+    </div>
+
+    <br><br>
+
+    <!-- Unique -->
+    <div>
+        <p>Total Unique</p>
+        <div>
+            <p>last Day: {{ analytic.unique_day }}</p>
+            <p>last Week: {{ analytic.unique_week }}</p>
+            <p>last Month: {{ analytic.unique_month }}</p>
+            <p>Total: {{ analytic.unique_total }}</p>
+        </div>
+
+        <br><br>
+
+        <p>Mobile Unique</p>
+        <div>
+            <p>last Day: {{ analytic.unique_day_mobile }}</p>
+            <p>last Week: {{ analytic.unique_week_mobile }}</p>
+            <p>last Month: {{ analytic.unique_month_mobile }}</p>
+            <p>Total: {{ analytic.unique_total_mobile }}</p>
+        </div>
+
+        <br><br>
+
+        <p>PC Unique</p>
+        <div>
+            <p>last Day: {{ analytic.unique_day_pc }}</p>
+            <p>last Week: {{ analytic.unique_week_pc }}</p>
+            <p>last Month: {{ analytic.unique_month_pc }}</p>
+            <p>Total: {{ analytic.unique_total_pc }}</p>
+        </div>
+
+    </div>
+
+    <br><br>
+
+</div>
 {% endfor %}
 </body>
 </html>
