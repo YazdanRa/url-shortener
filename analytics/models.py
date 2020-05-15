@@ -1,4 +1,8 @@
+from datetime import timedelta
+
 from django.db import models
+from django.db.models import Count, Q
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from accounts.models import CustomUser
@@ -15,8 +19,135 @@ class ShortURL(models.Model):
 
     @property
     def visit(self):
-        visit = Visit.objects.filter(url='short_path').count()
+        visit = Visit.objects.filter(url=self)\
+            .annotate(total=Count('ip'))\
+            .annotate(total_mobile=Count('ip', filter=
+                    Q(
+                        is_mobile=True,
+                    )))\
+            .annotate(total_pc=Count('ip', filter=
+                    Q(
+                        is_pc=True
+                    )))\
+            .annotate(last_month=Count('ip', filter=
+                    Q(
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=30)
+                    )))\
+            .annotate(last_month_mobile=Count('ip', filter=
+                    Q(
+                        Q(is_mobile=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=30)
+                    )))\
+            .annotate(last_month_pc=Count('ip', filter=
+                    Q(
+                        Q(is_pc=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=30)
+                    )))\
+            .annotate(last_week=Count('ip', filter=
+                    Q(
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=7)
+                    )))\
+            .annotate(last_week_mobile=Count('ip', filter=
+                    Q(
+                        Q(is_mobile=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=7)
+                    )))\
+            .annotate(last_week_pc=Count('ip', filter=
+                    Q(
+                        Q(is_pc=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=7)
+                    )))\
+            .annotate(last_day=Count('ip', filter=
+                    Q(
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=1)
+                    )))\
+            .annotate(last_day_mobile=Count('ip', filter=
+                    Q(
+                        Q(is_mobile=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=1)
+                    )))\
+            .annotate(last_day_pc=Count('ip', filter=
+                    Q(
+                        Q(is_pc=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=1)
+                    )))\
+            .distinct()
         return visit
+
+    @property
+    def unique_visit(self):
+        unique_visit = Visit.objects.filter(url=self)\
+            .annotate(total=Count('ip', distinct=True))\
+            .annotate(total_mobile=Count('ip', filter=
+                    Q(
+                        is_mobile=True
+                    ), distinct=True))\
+            .annotate(total_pc=Count('ip', filter=
+                    Q(
+                        is_pc=True
+                    ), distinct=True))\
+            .annotate(last_month=Count('ip', filter=
+                    Q(
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=30)
+                    ), distinct=True))\
+            .annotate(last_month_mobile=Count('ip', filter=
+                    Q(
+                        Q(is_mobile=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=30)
+                    ), distinct=True))\
+            .annotate(last_month_pc=Count('ip', filter=
+                    Q(
+                        Q(is_pc=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=30)
+                    ), distinct=True))\
+            .annotate(last_week=Count('ip', filter=
+                    Q(
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=7)
+                    ), distinct=True))\
+            .annotate(last_week_mobile=Count('ip', filter=
+                    Q(
+                        Q(is_mobile=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=7)
+                    ), distinct=True))\
+            .annotate(last_week_pc=Count('ip', filter=
+                    Q(
+                        Q(is_pc=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=7)
+                    ), distinct=True))\
+            .annotate(last_day=Count('ip', filter=
+                    Q(
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=1)
+                    ), distinct=True))\
+            .annotate(last_day_mobile=Count('ip', filter=
+                    Q(
+                        Q(is_mobile=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=1)
+                    ), distinct=True))\
+            .annotate(last_day_pc=Count('ip', filter=
+                    Q(
+                        Q(is_pc=True),
+                        visited_at__lte=now(),
+                        visited_at__gte=now() - timedelta(days=1)
+                    ), distinct=True))\
+            .distinct()
+        return unique_visit
 
     def __str__(self):
         return '{} ({})'.format(self.title, self.user)
