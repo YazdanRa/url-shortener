@@ -8,6 +8,6 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('dashboard/', include([
         path('', views.dashboard, name='dashboard'),
-        path('create/', views.create, name='create')
+        path('create/', views.create, name='create'),
     ])),
 ]

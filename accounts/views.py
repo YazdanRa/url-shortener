@@ -1,20 +1,10 @@
-import random
 import uuid
 
-from django.conf import settings
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError, PermissionDenied
-from django.db.models import Count, Sum, Q, F, Max, DateTimeField
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound, Http404
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
-from django.utils.decorators import method_decorator
-from django.utils.timezone import now
+from django.shortcuts import render, redirect
 from django.utils.translation import gettext_lazy as _
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods, require_POST, require_GET
-from django.views.generic import ListView
+from django.views.decorators.http import require_http_methods
 
 from analytics.models import ShortURL
 from yektanet.settings import SHORT_URL_TEMPLATE

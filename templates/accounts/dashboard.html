@@ -19,6 +19,7 @@
             <p>Origin URL: <a href="{{ url.url }}">{{ url.url }}</a></p>
             <p>Short URL: <a href="{{ url_template }}{{ url.short_path }}">{{ url_template }}{{ url.short_path }}</a></p>
             <p>Analytics: <a href="{{ url_template }}{{ url.short_path }}/analytics">{{ url_template }}{{ url.short_path }}/analytics</a></p>
+            <p>Uptate: <a href="{{ url_template }}{{ url.short_path }}/update">{{ url_template }}{{ url.short_path }}/update</a></p>
         </div><br>
     {% endfor %}
     <a href="{% url 'create' %}">Create ShortURL</a>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>update</title>
+</head>
+<body>
+    <h1>Update :)</h1>
+    <form action="{% url 'update' short_path=form.current_short_path.value %}" method="POST">
+        {% csrf_token %}
+        <div>
+            <p>{{ form.title.label }}</p>
+            <p>{{ form.title }}</p>
+        </div>
+        <div>
+            <p>{{ form.url.label }}</p>
+            <p>{{ form.url }}</p>
+        </div>
+        <div>
+            <p>{{ form.current_short_path.label }}</p>
+            <p>{{ form.current_short_path }}</p>
+        </div>
+        <div>
+            <p>{{ form.new_short_path.label }}</p>
+            <p>{{ form.new_short_path }}</p>
+        </div>
+        <div>
+            <p>{{ form.description.label }}</p>
+            <p>{{ form.description }}</p>
+        </div>
+        <div>
+            <button>Update</button>
+        </div>
+    </form>
+    <div>
+        <form action="{% url 'delete' short_path=form.current_short_path.value %}" method="POST">
+            {% csrf_token %}
+            <button>Delete</button>
+        </form>
+    </div>
+    <div>
+        <button href="{% url 'dashboard' %}">Back</button>
+    </div>
+
+</body>
+</html>

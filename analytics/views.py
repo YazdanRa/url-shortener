@@ -1,13 +1,17 @@
 from datetime import timedelta
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 from django.views.decorators.http import require_http_methods
 from ipware import get_client_ip
 
+from accounts.forms import CreateForm
+from .forms import UpdateForm
 from .models import ShortURL, Visit, Browser, OperationSystem, Device
 
 
@@ -183,3 +187,46 @@ def analytics(request, short_path):
     return render(request, 'analytics/index.html', {
         'analytics': analytics_list,
     })
+
+
+@login_required
+def update(request, short_path):
+
+    print(short_path)
+
+    if request.method == 'POST':
+        form = UpdateForm(request.POST)
+        if form.is_valid():
+            URL = ShortURL.objects.filter(short_path=short_path)
+
+            new_short_path = form.cleaned_data['new_short_path']
+
+            if not len(new_short_path):
+                new_short_path = short_path
+
+            URL.update(
+                title=form.cleaned_data['title'],
+                url=form.cleaned_data['url'],
+                short_path=new_short_path,
+                description=form.cleaned_data['description'],
+            )
+            messages.success(request, _('URL updated'))
+            return redirect('dashboard')
+
+    URL = ShortURL.objects.get(short_path=short_path)
+    form = UpdateForm(initial={
+        'title': URL.title,
+        'url': URL.url,
+        'current_short_path': URL.short_path,
+        'description': URL.description,
+    })
+    return render(request, 'analytics/update.html', {'form': form})
+
+
+@login_required
+@require_http_methods(['POST'])
+def delete(request, short_path):
+    url = ShortURL.objects.filter(short_path=short_path)
+    url.delete()
+    messages.success(request, _('URL deleted!'))
+    return redirect('dashboard')
