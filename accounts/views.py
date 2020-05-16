@@ -45,7 +45,7 @@ def login(request):
             username = form.cleaned_data['username'].lower()
             if '@' in username:
                 try:
-                    user = CustomUser.objects.filter(email=username).get()
+                    user = CustomUser.objects.get(email=username)
                     username = user.username
                 except:
                     pass
