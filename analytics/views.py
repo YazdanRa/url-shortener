@@ -121,6 +121,23 @@ def analytics(request, short_path):
                     visit__visited_at__lte=now(),
                     visit__visited_at__gte=now() - timedelta(days=1)
                 ))) \
+        .annotate(from_mid=Count('visit__ip', filter=
+                Q(
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now().replace(hour=00, minute=00)
+                ))) \
+        .annotate(from_mid_mobile=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_mobile=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now().replace(hour=00, minute=00)
+                ))) \
+        .annotate(from_mid_pc=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_pc=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now().replace(hour=00, minute=00)
+                ))) \
         .annotate(unique_total=Count('visit__ip', distinct=True)) \
         .annotate(unique_total_mobile=Count('visit__ip', filter=
                 Q(
@@ -180,6 +197,23 @@ def analytics(request, short_path):
                     Q(visit__is_pc=True),
                     visit__visited_at__lte=now(),
                     visit__visited_at__gte=now() - timedelta(days=1)
+                ), distinct=True)) \
+        .annotate(unique_from_mid=Count('visit__ip', filter=
+                Q(
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now().replace(hour=00, minute=00)
+                ), distinct=True)) \
+        .annotate(unique_from_mid_mobile=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_mobile=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now().replace(hour=00, minute=00)
+                ), distinct=True)) \
+        .annotate(unique_from_mid_pc=Count('visit__ip', filter=
+                Q(
+                    Q(visit__is_pc=True),
+                    visit__visited_at__lte=now(),
+                    visit__visited_at__gte=now().replace(hour=00, minute=00)
                 ), distinct=True)) \
         .distinct()
 
