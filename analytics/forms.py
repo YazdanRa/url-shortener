@@ -1,12 +1,7 @@
-import string
-
 from django import forms
-from django.contrib.auth.password_validation import validate_password
-from django.core.validators import RegexValidator
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from accounts.models import CustomUser
 from analytics.models import ShortURL
 
 
