@@ -190,10 +190,8 @@ def analytics(request, short_path):
 
 
 @login_required
+@require_http_methods(['POST', 'GET'])
 def update(request, short_path):
-
-    print(short_path)
-
     if request.method == 'POST':
         form = UpdateForm(request.POST)
         if form.is_valid():
