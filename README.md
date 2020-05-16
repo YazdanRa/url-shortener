@@ -7,7 +7,7 @@ Yektanet
 - [Django-ipware](https://github.com/un33k/django-ipware)
 
 # Setup
-create database_settings.py, local_settings.py like EXAMPLES.
+create **database_settings.py** and **local_settings.py** like EXAMPLES.
 
 ````
 database_settings.py
