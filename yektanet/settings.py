@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'yektanet.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 try:
-    from .database_sttings import *
+    from .database_settings import *
 except ImportError:
     pass
 
