@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.db.models import Count
 
 from analytics import models
 from analytics.models import Browser, Device, OperationSystem
