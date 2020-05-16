@@ -5,12 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 from ipware import get_client_ip
 
-from accounts.forms import CreateForm
 from .forms import UpdateForm
 from .models import ShortURL, Visit, Browser, OperationSystem, Device
 
