@@ -78,5 +78,4 @@ python manage.py runserver
 
 # Notice
 This project is a step of the Yektanet job interview.
-you can find the [documents](docs/Software%20Engineer%20Interview%20Task.pdf) in the docs directory.
-
+At the request of the Yektanet, the documents was deleted.
